@@ -25,7 +25,7 @@ export default function Home() {
         sessionStorage.setItem("originalImage", URL.createObjectURL(file));
         router.push("/result");
       } else {
-        alert("Processing failed, please try another image");
+        alert("Processing failed");
       }
     } catch (error) {
       alert("Upload failed");
@@ -40,92 +40,54 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4">Image Background Remover</h1>
-          <p className="text-xl text-gray-600">Remove background from images in seconds.</p>
-          <p className="text-gray-500 mt-2">Upload an image, remove the background automatically, and download a transparent PNG instantly.</p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100">
 
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-lg shadow-lg p-8 border-2 border-dashed border-gray-300">
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              onChange={handleFileChange}
-              disabled={uploading}
-              className="hidden"
-              id="fileInput"
-            />
-            <label
-              htmlFor="fileInput"
-              className="cursor-pointer block text-center"
-            >
-              <div className="py-12">
-                <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                  <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <p className="mt-4 text-lg">{uploading ? "Processing..." : "Click to upload or drag and drop"}</p>
-                <p className="text-sm text-gray-500 mt-2">JPG, PNG or WebP</p>
-              </div>
-            </label>
+      {/* Main Content */}
+      <main className="flex items-center justify-center min-h-screen px-6">
+        <div className="max-w-2xl w-full">
+          <div className="text-center mb-10">
+            <h1 className="text-5xl font-bold text-gray-900 mb-4">
+              Remove Background
+            </h1>
+            <p className="text-xl text-gray-700">
+              Upload your image and get a transparent background instantly
+            </p>
           </div>
-        </div>
 
-        <div className="mt-16 max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-8">How It Works</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-blue-600">1</span>
-              </div>
-              <h3 className="font-semibold mb-2">Upload Image</h3>
-              <p className="text-gray-600">Choose your image file</p>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            disabled={uploading}
+            className="hidden"
+            id="fileInput"
+          />
+          <label htmlFor="fileInput" className="block cursor-pointer">
+            <div className="bg-white/90 backdrop-blur-sm border-2 border-dashed border-gray-300 rounded-2xl p-16 hover:border-purple-400 hover:bg-white transition-all shadow-xl">
+              {uploading ? (
+                <div className="text-center">
+                  <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                  <p className="text-lg text-gray-700 font-medium">Processing...</p>
+                </div>
+              ) : (
+                <div className="text-center">
+                  <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                    <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                  </div>
+                  <p className="text-xl font-semibold text-gray-800 mb-2">
+                    Click to upload or drag and drop
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    PNG, JPG, WebP (Max 10MB)
+                  </p>
+                </div>
+              )}
             </div>
-            <div className="text-center">
-              <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-blue-600">2</span>
-              </div>
-              <h3 className="font-semibold mb-2">Remove Background</h3>
-              <p className="text-gray-600">Automatic processing</p>
-            </div>
-            <div className="text-center">
-              <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-blue-600">3</span>
-              </div>
-              <h3 className="font-semibold mb-2">Download PNG</h3>
-              <p className="text-gray-600">Get your transparent image</p>
-            </div>
-          </div>
+          </label>
         </div>
-
-        <div className="mt-16 max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-8">FAQ</h2>
-          <div className="space-y-4">
-            <details className="bg-white p-4 rounded-lg shadow">
-              <summary className="font-semibold cursor-pointer">Is this free?</summary>
-              <p className="mt-2 text-gray-600">Yes, you can use this tool for free.</p>
-            </details>
-            <details className="bg-white p-4 rounded-lg shadow">
-              <summary className="font-semibold cursor-pointer">What image formats are supported?</summary>
-              <p className="mt-2 text-gray-600">We support JPG, PNG, and WebP formats.</p>
-            </details>
-            <details className="bg-white p-4 rounded-lg shadow">
-              <summary className="font-semibold cursor-pointer">Can I make the background white?</summary>
-              <p className="mt-2 text-gray-600">Yes, after processing you can switch to a white background.</p>
-            </details>
-            <details className="bg-white p-4 rounded-lg shadow">
-              <summary className="font-semibold cursor-pointer">Does it work for product photos?</summary>
-              <p className="mt-2 text-gray-600">Yes, it works great for product photos, portraits, and logos.</p>
-            </details>
-            <details className="bg-white p-4 rounded-lg shadow">
-              <summary className="font-semibold cursor-pointer">Do I need to sign up?</summary>
-              <p className="mt-2 text-gray-600">No registration required. Just upload and download.</p>
-            </details>
-          </div>
-        </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
