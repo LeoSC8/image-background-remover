@@ -1,19 +1,18 @@
-import type { Metadata } from "next";
-import "./globals.css";
+import './globals.css'
 
-export const metadata: Metadata = {
-  title: "Image Background Remover - Remove Background from Images in Seconds",
-  description: "Upload an image, remove the background automatically, and download a transparent PNG instantly.",
-};
+export const metadata = {
+  title: 'Image Background Remover',
+  description: '一键去除图片背景',
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="zh">
       <body>{children}</body>
     </html>
-  );
+  )
 }
