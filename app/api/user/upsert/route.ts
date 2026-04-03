@@ -1,3 +1,5 @@
+export const runtime = 'edge'
+
 import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
@@ -9,7 +11,6 @@ export async function POST(req: NextRequest) {
 
   const db = (process.env as any).DB
   if (!db) {
-    // Local dev: no D1 available
     return NextResponse.json({ ok: true })
   }
 

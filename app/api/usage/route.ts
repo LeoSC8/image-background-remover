@@ -1,11 +1,11 @@
 export const runtime = 'edge'
 
 import { NextRequest, NextResponse } from "next/server"
-import { getToken } from "next-auth/jwt"
+import { auth } from "@/lib/auth"
 
 export async function POST(req: NextRequest) {
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
-  if (!token?.email) {
+  const session = await auth()
+  if (!session?.user?.email) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       .prepare(
         "UPDATE users SET usage_count = usage_count + 1, last_login = CURRENT_TIMESTAMP WHERE email = ?"
       )
-      .bind(token.email)
+      .bind(session.user.email)
       .run()
     return NextResponse.json({ ok: true })
   } catch (e) {

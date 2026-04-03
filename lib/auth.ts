@@ -1,38 +1,42 @@
-import { NextAuthOptions } from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import type { Account, User } from "next-auth"
+import NextAuth from "next-auth"
+import Google from "next-auth/providers/google"
 
-export const authOptions: NextAuthOptions = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
-    GoogleProvider({
+    Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async session({ session, token }) {
-      if (session.user) (session.user as { id?: string }).id = token.sub
+      if (session.user && token.sub) {
+        session.user.id = token.sub
+      }
       return session
     },
-    async signIn({ user, account }: { user: User; account: Account | null }) {
-      if (!account) return true
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id
+      }
+      return token
+    },
+    async signIn({ user }) {
+      // 登录时写入 D1（非阻塞）
       try {
-        const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000"
-        await fetch(`${baseUrl}/api/user/upsert`, {
+        const baseUrl = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "http://localhost:3000"
+        fetch(`${baseUrl}/api/user/upsert`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            id: `${account.provider}_${account.providerAccountId}`,
+            id: user.id,
             email: user.email,
             name: user.name,
             image: user.image,
           }),
         })
-      } catch {
-        // Non-blocking
-      }
+      } catch {}
       return true
     },
   },
-}
+})
