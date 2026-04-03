@@ -1,4 +1,5 @@
 import './globals.css'
+import AuthProvider from './components/AuthProvider'
 
 export const metadata = {
   title: 'Image Background Remover',
@@ -12,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh">
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   )
 }
