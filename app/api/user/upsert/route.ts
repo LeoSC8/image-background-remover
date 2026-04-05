@@ -1,5 +1,3 @@
-export const runtime = 'edge'
-
 import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
@@ -9,7 +7,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
   }
 
-  const db = (process.env as any).DB
+  const db = (req as any).env?.DB
   if (!db) {
     return NextResponse.json({ ok: true })
   }

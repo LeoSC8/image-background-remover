@@ -4,25 +4,21 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "build:cf": "next build && npx @cloudflare/next-on-pages",
+    "build:next": "next build",
+    "build": "next build && SKIP_NEXT_APP_BUILD=1 npx opennextjs-cloudflare build",
     "start": "next start",
-    "cf:preview": "npm run build:cf && wrangler pages dev",
-    "cf:deploy": "npm run build:cf && wrangler pages deploy"
+    "cf:preview": "npm run build && wrangler pages dev",
+    "cf:deploy": "npm run build && wrangler pages deploy"
   },
   "dependencies": {
+    "@auth/d1-adapter": "^1.11.1",
     "next": "^15.5.2",
-    "next-auth": "^5.0.0-beta.25",
+    "next-auth": "^5.0.0-beta.30",
     "react": "^18.3.0",
     "react-dom": "^18.3.0"
   },
-  "overrides": {
-    "@cloudflare/next-on-pages": {
-      "next": "15.5.2"
-    }
-  },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
+    "@opennextjs/cloudflare": "^1.18.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.3.0",
     "autoprefixer": "^10.4.0",

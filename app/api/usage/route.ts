@@ -1,5 +1,3 @@
-export const runtime = 'edge'
-
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
 
@@ -9,7 +7,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const db = (process.env as any).DB
+  const db = (req as any).env?.DB
   if (!db) {
     return NextResponse.json({ ok: true })
   }
