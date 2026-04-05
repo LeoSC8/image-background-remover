@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  trustHost: true,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -11,7 +12,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async session({ session, token }) {
       if (session.user && token.sub) {
-        session.user.id = token.sub
+        (session.user as any).id = token.sub
       }
       return session
     },
@@ -22,9 +23,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token
     },
     async signIn({ user }) {
-      // 登录时写入 D1（非阻塞）
       try {
-        const baseUrl = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "http://localhost:3000"
+        const baseUrl = process.env.AUTH_URL || process.env.NEXTAUTH_URL || "http://localhost:3000"
         fetch(`${baseUrl}/api/user/upsert`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
