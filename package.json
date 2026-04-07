@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build:next": "npx next build",
-    "build": "npx next build "build": "npx next build && SKIP_NEXT_APP_BUILD=1 npx opennextjs-cloudflare build","build": "npx next build && SKIP_NEXT_APP_BUILD=1 npx opennextjs-cloudflare build", npx opennextjs-cloudflare build",
+    "build": "npx next build && npx opennextjs-cloudflare build",
     "start": "next start",
     "cf:preview": "npm run build && wrangler pages dev",
     "cf:deploy": "npm run build && wrangler pages deploy"
@@ -25,6 +25,6 @@
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.4.0",
-    "wrangler": "^4.80.0"
+    "wrangler": "^3.80.0"
   }
 }
