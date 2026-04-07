@@ -16,10 +16,16 @@ jobs:
         run: npm cache clean --force
       - name: Install
         run: npm ci
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
       - name: Build Next.js
         run: npm run build:next
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
       - name: Build Worker
         run: npm run build:worker
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
