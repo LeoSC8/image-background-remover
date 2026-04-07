@@ -9,6 +9,9 @@
   "assets": {
     "directory": ".open-next/assets"
   },
+  "routes": [
+    { "pattern": "leosc8.online", "custom_domain": true }
+  ],
   "d1_databases": [
     {
       "binding": "DB",
