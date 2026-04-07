@@ -3,6 +3,9 @@ main = ".open-next/worker.js"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
+[vars]
+AUTH_URL = "https://leosc8.online"
+
 [[d1_databases]]
 binding = "DB"
 database_id = "b269fc49-5023-43f9-9818-e4faca4908c4"
