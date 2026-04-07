@@ -15,7 +15,7 @@ jobs:
       - name: Clean npm cache
         run: npm cache clean --force
       - name: Install
-        run: npm ci
+        run: npm ci --verbose 2>&1 | tee install.log || (cat install.log && exit 1)
         env:
           NODE_OPTIONS: '--max-old-space-size=4096'
       - name: Build Next.js
