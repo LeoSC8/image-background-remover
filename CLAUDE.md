@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Image background remover - an online AI-powered tool for removing backgrounds from images. Built with Next.js 14, React 18, and @imgly/background-removal library.
+Image background remover - an online AI-powered tool for removing backgrounds from images. Built with Next.js 15, React 18, deployed on Cloudflare Workers via OpenNext.
 
 Target users: E-commerce sellers, designers, content creators, personal users.
 
@@ -14,7 +14,13 @@ Target users: E-commerce sellers, designers, content creators, personal users.
 # Start development server
 npm run dev
 
-# Build for production
+# Build Next.js only
+npm run build:next
+
+# Build Cloudflare Worker only
+npm run build:worker
+
+# Build all (Next.js + Worker)
 npm run build
 
 # Start production server
@@ -23,9 +29,11 @@ npm start
 
 ## Architecture
 
-**Client-side processing**: Background removal runs entirely in the browser using @imgly/background-removal. No backend API - all processing happens on the client.
+**Server-side processing**: Background removal uses the remove.bg API. Image processing requests are sent to the API and results returned to the client.
 
 **Single-page app**: Main UI in `app/page.tsx` with client-side state management (useState). Upload → Process → Download flow.
+
+**Deployment**: Cloudflare Workers via @opennextjs/cloudflare. CI/CD through GitHub Actions (`.github/workflows/deploy.yml`).
 
 **File constraints**:
 - Formats: JPG, PNG, WEBP only
