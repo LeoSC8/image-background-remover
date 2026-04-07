@@ -12,7 +12,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
+      - name: Clean npm cache
+        run: npm cache clean --force
       - name: Install
         run: npm ci
       - name: Build Next.js
