@@ -9,8 +9,11 @@
   "assets": {
     "directory": ".open-next/assets"
   },
-  "custom_domains": [
-    { "hostname": "leosc8.online", "override_existing_dns_record": true, "override_existing_origin": true }
+  "routes": [
+    {
+      "pattern": "leosc8.online/*",
+      "zone_name": "leosc8.online"
+    }
   ],
   "d1_databases": [
     {
