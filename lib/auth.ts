@@ -7,7 +7,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
   const { env } = getCloudflareContext()
   return {
     trustHost: true,
-    providers: [Google],
+    secret: env.AUTH_SECRET,
+    providers: [
+      Google({
+        clientId: env.GOOGLE_CLIENT_ID,
+        clientSecret: env.GOOGLE_CLIENT_SECRET,
+      }),
+    ],
     adapter: D1Adapter(env.DB as any),
     callbacks: {
       async session({ session, user }) {

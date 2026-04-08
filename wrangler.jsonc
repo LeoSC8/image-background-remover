@@ -15,6 +15,10 @@
       "zone_name": "leosc8.online"
     }
   ],
+  "vars": {
+    "AUTH_URL": "https://leosc8.online",
+    "NEXTAUTH_URL": "https://leosc8.online"
+  },
   "d1_databases": [
     {
       "binding": "DB",
