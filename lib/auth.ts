@@ -11,6 +11,11 @@ function getD1() {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth(() => {
+  const db = getD1()
+  console.log("[auth] DB binding:", db ? "OK" : "MISSING")
+  console.log("[auth] GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID ? "OK" : "MISSING")
+  console.log("[auth] GOOGLE_CLIENT_SECRET:", process.env.GOOGLE_CLIENT_SECRET ? "OK" : "MISSING")
+  console.log("[auth] AUTH_SECRET:", process.env.AUTH_SECRET ? "OK" : "MISSING")
   return {
     trustHost: true,
     providers: [
@@ -19,11 +24,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth(() => {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       }),
     ],
-    adapter: D1Adapter(getD1() as any),
+    adapter: D1Adapter(db as any),
     callbacks: {
       async session({ session, user }) {
         if (session.user) session.user.id = user.id
         return session
+      },
+    },
+    logger: {
+      error(error) {
+        console.error("[auth error]", error.name, (error as any).cause ?? error.message)
       },
     },
   }
