@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { auth } from "@/lib/auth"
+import { getD1 } from "@/lib/db"
 
 export async function POST(req: NextRequest) {
   const session = await auth()
@@ -7,7 +8,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const db = (req as any).env?.DB
+  const db = getD1()
   if (!db) {
     return NextResponse.json({ ok: true })
   }

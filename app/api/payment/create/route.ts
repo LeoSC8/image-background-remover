@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { getD1 } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,7 +9,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '请先登录' }, { status: 401 });
     }
 
-    const db = (request as any).env?.DB;
+    const db = getD1();
     if (!db) {
       return NextResponse.json({ error: 'Database not available' }, { status: 500 });
     }

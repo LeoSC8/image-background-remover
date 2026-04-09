@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { getD1 } from "@/lib/db"
 
 export async function POST(req: NextRequest) {
   const { id, email, name, image } = await req.json()
@@ -7,7 +8,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
   }
 
-  const db = (req as any).env?.DB
+  const db = getD1()
   if (!db) {
     return NextResponse.json({ ok: true })
   }

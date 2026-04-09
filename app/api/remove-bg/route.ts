@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { getD1 } from '@/lib/db';
 
 // Helper function to add watermark to image
 async function addWatermark(imageBlob: Blob): Promise<Blob> {
@@ -19,7 +20,7 @@ function getClientIP(request: NextRequest): string {
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
-    const db = (request as any).env?.DB;
+    const db = getD1();
 
     if (!db) {
       return NextResponse.json({ error: 'Database not available' }, { status: 500 });
