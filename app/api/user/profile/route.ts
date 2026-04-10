@@ -19,7 +19,9 @@ export async function GET(req: NextRequest) {
         `SELECT
           id, email, name, image, created_at, last_login,
           usage_count, credits_remaining, membership_type,
-          membership_expires_at, total_credits_purchased
+          membership_expires_at, total_credits_purchased,
+          paypal_subscription_id, paypal_subscription_status,
+          subscription_cancel_at_period_end
         FROM users
         WHERE email = ?`
       )
@@ -49,6 +51,9 @@ export async function GET(req: NextRequest) {
       membershipType,
       membershipExpiresAt: result.membership_expires_at,
       totalCreditsPurchased: result.total_credits_purchased,
+      paypalSubscriptionId: result.paypal_subscription_id,
+      paypalSubscriptionStatus: result.paypal_subscription_status,
+      subscriptionCancelAtPeriodEnd: result.subscription_cancel_at_period_end || 0,
     })
   } catch (e) {
     console.error("profile fetch error:", e)

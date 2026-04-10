@@ -17,7 +17,10 @@
   ],
   "vars": {
     "AUTH_URL": "https://leosc8.online",
-    "NEXTAUTH_URL": "https://leosc8.online"
+    "NEXTAUTH_URL": "https://leosc8.online",
+    "PAYPAL_MODE": "sandbox",
+    "NEXT_PUBLIC_PAYPAL_PREMIUM_PLAN_ID": "P-7XU10824DY4357808NHL327Y",
+    "NEXT_PUBLIC_PAYPAL_VIP_PLAN_ID": "P-4AA17171XK460400FNHL327Y"
   },
   "d1_databases": [
     {

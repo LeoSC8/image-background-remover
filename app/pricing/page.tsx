@@ -17,29 +17,51 @@ export default function PricingPage() {
 
     setLoading(item.id);
     try {
-      const response = await fetch("/api/payment/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type,
-          itemId: item.id,
-          amount: item.price,
-          credits: item.credits,
-          membershipType: item.membershipType,
-          durationDays: item.durationDays,
-        }),
-      });
+      let response;
+
+      if (type === "credit_pack") {
+        // Create PayPal order for one-time payment
+        response = await fetch("/api/paypal/create-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            credits: item.credits,
+            amount: item.price,
+            packId: item.id,
+          }),
+        });
+      } else {
+        // Create PayPal subscription for membership
+        // Note: You need to create plan IDs in PayPal dashboard first
+        const planId = item.membershipType === "premium"
+          ? process.env.NEXT_PUBLIC_PAYPAL_PREMIUM_PLAN_ID || "P-PREMIUM-PLAN-ID"
+          : process.env.NEXT_PUBLIC_PAYPAL_VIP_PLAN_ID || "P-VIP-PLAN-ID";
+
+        response = await fetch("/api/paypal/create-subscription", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            membershipType: item.membershipType,
+            planId,
+          }),
+        });
+      }
 
       if (!response.ok) {
-        throw new Error("购买失败");
+        throw new Error("创建支付失败");
       }
 
       const data = await response.json();
-      alert(`购买成功！${type === "credit_pack" ? `已添加 ${item.credits} 次额度` : `已升级为 ${item.name} 会员`}`);
-      router.push("/profile");
+
+      // Redirect to PayPal for approval
+      if (data.approvalUrl) {
+        window.location.href = data.approvalUrl;
+      } else {
+        throw new Error("未获取到支付链接");
+      }
     } catch (error) {
-      alert("购买失败，请稍后重试");
-    } finally {
+      console.error("Purchase error:", error);
+      alert("创建支付失败，请稍后重试");
       setLoading(null);
     }
   };

@@ -13,7 +13,10 @@ CREATE TABLE IF NOT EXISTS users (
   daily_usage_reset_date TEXT,                   -- 每日额度重置日期 (YYYY-MM-DD)
   membership_type TEXT NOT NULL DEFAULT 'free',  -- 会员类型: free/premium/vip
   membership_expires_at DATETIME,                -- 会员到期时间
-  total_credits_purchased INTEGER NOT NULL DEFAULT 0  -- 累计购买额度
+  total_credits_purchased INTEGER NOT NULL DEFAULT 0,  -- 累计购买额度
+  paypal_subscription_id TEXT,                   -- PayPal 订阅 ID
+  paypal_subscription_status TEXT,               -- PayPal 订阅状态: active/cancelled/expired
+  subscription_cancel_at_period_end INTEGER DEFAULT 0  -- 是否在周期结束时取消 (0/1)
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
@@ -58,6 +61,8 @@ CREATE TABLE IF NOT EXISTS transactions (
   membership_duration_days INTEGER, -- Duration in days (for upgrades)
   status TEXT NOT NULL DEFAULT 'pending',  -- pending/completed/failed
   payment_method TEXT,             -- stripe/paypal/etc (placeholder for now)
+  paypal_order_id TEXT,            -- PayPal Order ID (for one-time payments)
+  paypal_subscription_id TEXT,     -- PayPal Subscription ID (for subscriptions)
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   completed_at DATETIME,
   FOREIGN KEY (user_id) REFERENCES users(id)

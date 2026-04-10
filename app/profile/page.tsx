@@ -16,6 +16,9 @@ interface UserProfile {
   membershipType: string;
   membershipExpiresAt: string | null;
   totalCreditsPurchased: number;
+  paypalSubscriptionId: string | null;
+  paypalSubscriptionStatus: string | null;
+  subscriptionCancelAtPeriodEnd: number;
 }
 
 interface UsageHistoryItem {
@@ -36,6 +39,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -100,6 +104,32 @@ export default function ProfilePage() {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  };
+
+  const handleCancelSubscription = async () => {
+    if (!confirm('确定要取消订阅吗？订阅将在当前周期结束后停止续费。')) {
+      return;
+    }
+
+    setCancelling(true);
+    try {
+      const res = await fetch('/api/paypal/cancel-subscription', {
+        method: 'POST',
+      });
+
+      if (res.ok) {
+        alert('订阅已取消，将在当前周期结束后停止续费');
+        fetchProfile(); // Refresh profile
+      } else {
+        const error = await res.json();
+        alert(error.error || '取消订阅失败');
+      }
+    } catch (error) {
+      console.error('Cancel subscription error:', error);
+      alert('取消订阅失败，请稍后重试');
+    } finally {
+      setCancelling(false);
+    }
   };
 
   if (status === 'loading' || loading) {
@@ -181,9 +211,23 @@ export default function ProfilePage() {
           {/* Membership Info */}
           {profile.membershipExpiresAt && (
             <div className="mt-4 p-4 bg-yellow-50 rounded-xl">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-600 mb-2">
                 会员到期时间: {formatDate(profile.membershipExpiresAt)}
               </div>
+              {profile.subscriptionCancelAtPeriodEnd === 1 && (
+                <div className="text-sm text-orange-600 font-semibold">
+                  ⚠️ 订阅将在当前周期结束后取消
+                </div>
+              )}
+              {profile.paypalSubscriptionId && profile.paypalSubscriptionStatus === 'active' && profile.subscriptionCancelAtPeriodEnd === 0 && (
+                <button
+                  onClick={handleCancelSubscription}
+                  disabled={cancelling}
+                  className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {cancelling ? '处理中...' : '取消订阅'}
+                </button>
+              )}
             </div>
           )}
 
